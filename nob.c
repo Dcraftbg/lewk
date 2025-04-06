@@ -5,7 +5,8 @@
 #define SRCDIR "./kernel/src/"
 #define OBJDIR "./int/kernel/"
 const char* lew_sources[] = {
-    SRCDIR "main.lew"
+    SRCDIR "main.lew",
+    SRCDIR "serial.lew",
 };
 const char* nasm_sources[] = {
     SRCDIR "io.nasm"

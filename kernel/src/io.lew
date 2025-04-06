@@ -1,0 +1,2 @@
+extern outb :: (port: u16, value: u8);
+extern inb :: (port: u16) -> u8;

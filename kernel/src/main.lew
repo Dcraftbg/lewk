@@ -1,0 +1,21 @@
+extern outb :: (port: u16, value: u8);
+extern inb :: (port: u16) -> u8;
+
+COM_PORT   :: 0x3f8u16;
+COM_5      :: COM_PORT + 5u16;
+COM_STATUS :: COM_5;
+
+serial_write_char :: (c: i8) {
+    while (inb(COM_STATUS) & 0x20) == 0 {}
+    outb(COM_PORT, cast(c, u8));
+}
+serial_write_cstr :: (c_str: *i8) {
+    while *c_str != 0 {
+        serial_write_char(*c_str);
+        c_str = c_str + 1;
+    }
+}
+_start :: () {
+    serial_write_cstr(c"Hello from lewk!\n");
+    while 0 == 0 {}
+}

@@ -1,0 +1,5 @@
+nob
+*.old
+*.log
+bin/
+int/

@@ -1,0 +1,28 @@
+LIMINE_COMMON_MAGIC0 :: 0xc7b1dd30df4c8b88u64;
+LIMINE_COMMON_MAGIC1 :: 0x0a82e883a194f07bu64;
+LimineID :: typedef struct {
+    a: u64,
+    b: u64,
+    c: u64,
+    d: u64
+}
+LIMINE_FRAMEBUFFER_REQUEST :: struct LimineID { .a = LIMINE_COMMON_MAGIC0, .b = LIMINE_COMMON_MAGIC1, .c = 0x9d5827dcd881dd75, .d = 0xa3148604f6fab11b }
+limine_framebuffer :: typedef struct {
+    address: *u32,
+    width: u64,
+    height: u64,
+    pitch: u64,
+    bpp: u16,
+    // .....
+}
+limine_framebuffer_response :: typedef struct {
+    revision: u64,
+    framebuffer_count: u64,
+    framebuffers: **limine_framebuffer
+}
+
+limine_framebuffer_request :: typedef struct {
+    id: LimineID,
+    revision: u64,
+    response: u64,
+}

@@ -1,6 +1,43 @@
 #import "serial.lew"
+#import "limine.lew"
 
+framebuffer := struct limine_framebuffer_request {
+    .id = LIMINE_FRAMEBUFFER_REQUEST,
+    .revision = 0,
+    .response = 0
+}
 _start :: () {
     serial_write_cstr(c"Hello from lewk!\n");
+    if framebuffer.response == 0 {
+        serial_write_cstr(c"No framebuffer!\n");
+        while 0 == 0 {}
+    }
+    resp := cast(framebuffer.response, *limine_framebuffer_response);
+    if resp.framebuffer_count == 0 {
+        serial_write_cstr(c"No framebuffer!\n");
+        while 0 == 0 {}
+    }
+    fb := *(resp.framebuffers + 0);
+    {
+        addr := fb.address; 
+        y := 0u64;
+        while y < fb.height {
+            defer y = y + 1;
+            x := 0u64;
+            while x < fb.width {
+                defer x = x + 1;
+                *(addr + x) = 0x212121;
+            }
+            addr = cast((cast(addr, *u8) + fb.pitch), *u32);
+        }
+    }
+    serial_write_cstr(c"After background?\n");
+    {
+        i := 0;
+        while i < fb.height-100 {
+            defer i = i + 1;
+            *(fb.address + i + (fb.pitch/4)*i) = 0xff0000ff;
+        }
+    }
     while 0 == 0 {}
 }

@@ -1,0 +1,4 @@
+[submodule "kernel/vendor/limine"]
+	path = kernel/vendor/limine
+	url = https://github.com/limine-bootloader/limine.git
+	branch = x9.x-binary

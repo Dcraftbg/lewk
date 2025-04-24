@@ -15,27 +15,12 @@ const char* nasm_sources[] = {
 #define lew_compiler(cmd) nob_cmd_append(cmd, "lewc")
 #define lew_flags(cmd)
 #define lew_output(cmd, output) nob_cmd_append(cmd, "-o", output)
-bool lewc_compile_to_s(Nob_Cmd* cmd, const char* path, const char* opath) {
+bool lewc_compile(Nob_Cmd* cmd, const char* path, const char* opath) {
     lew_compiler(cmd);
     lew_flags(cmd);
     nob_cmd_append(cmd, path);
     lew_output(cmd, opath);
     return nob_cmd_run_sync_and_reset(cmd);
-}
-bool lewc_compile(Nob_Cmd* cmd, const char* path, const char* opath) {
-    size_t temp = nob_temp_save();
-    const char* s_path = nob_temp_sprintf("%s.s", opath);
-    if(!lewc_compile_to_s(cmd, path, s_path)) {
-        nob_temp_rewind(temp);
-        return false;
-    }
-    nob_cmd_append(cmd, "as");
-    nob_cmd_append(cmd, s_path);
-    nob_cmd_append(cmd, "-o");
-    nob_cmd_append(cmd, opath);
-    bool res = nob_cmd_run_sync_and_reset(cmd);
-    nob_temp_rewind(temp);
-    return res;
 }
 bool nasm_assemble(Nob_Cmd* cmd, const char* path, const char* opath) {
     nob_cmd_append(cmd, "nasm", "-f", "elf64", path, "-o", opath);
